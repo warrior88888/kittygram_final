@@ -1,6 +1,6 @@
 FROM python:3.10-slim AS builder
 WORKDIR /app
-COPY backend/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 FROM python:3.10-slim
