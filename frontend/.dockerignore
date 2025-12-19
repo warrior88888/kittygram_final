@@ -1,2 +1,17 @@
-node_modules
-build
+# Зависимости (самая тяжелая папка)
+node_modules/
+npm-debug.log
+
+# Сборка
+build/
+dist/
+
+# Git & IDE
+.git
+.gitignore
+.vscode/
+.idea/
+
+# Разное
+.DS_Store
+README.md

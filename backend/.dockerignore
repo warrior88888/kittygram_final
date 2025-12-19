@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+env/
+venv/
+.env
+
+# Django
+db.sqlite3
+media/
+collected_static/
+staticfiles/
+
+# Git & IDE
+.git
+.gitignore
+.vscode/
+.idea/
+
+# Разное
+README.md
