@@ -38,9 +38,9 @@ class ServerConfig(ConfigBase):
 
 
 class Config(ConfigBase):
-    db: DatabaseConfig = Field(default_factory=lambda: DatabaseConfig())
-    django: DjangoConfig = Field(default_factory=lambda: DjangoConfig())
-    server: ServerConfig = Field(default_factory=lambda: ServerConfig())
+    db: DatabaseConfig = Field(default_factory=DatabaseConfig)
+    django: DjangoConfig = Field(default_factory=DjangoConfig)
+    server: ServerConfig = Field(default_factory=ServerConfig)
 
 
 settings = Config()
