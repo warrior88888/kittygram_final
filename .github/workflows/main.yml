@@ -53,11 +53,10 @@ jobs:
         SERVER_DOMAIN: kttgram.duckdns.org
       run: |
         python -m ruff check backend/
-        cd backend/
-        python manage.py test
+        python backend/manage.py test backend/
     - name: Run infrastructure tests (pre-deploy)
       run: |
-        pytest tests/test_files.py -p no:django
+        pytest -c /dev/null tests/test_files.py -p no:django
   build_backend_and_push_to_docker_hub:
     name: Push Docker image to DockerHub
     runs-on: ubuntu-latest
@@ -174,7 +173,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            cd taski
+            cd kittygram
             sudo docker compose -f docker-compose.production.yml pull
             sudo docker compose -f docker-compose.production.yml up -d
             sudo docker image prune -af
