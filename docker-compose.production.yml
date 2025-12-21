@@ -28,8 +28,8 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - static:/app/collected_static/
-      - media:/app/media/
+      - static:/app/backend/collected_static/
+      - media:/app/backend/media/
 
   frontend:
     image: warrior88888/kittygram_frontend

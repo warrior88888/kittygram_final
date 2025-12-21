@@ -75,7 +75,10 @@ jobs:
       - name: Push to DockerHub
         uses: docker/build-push-action@v5
         with:
-          context: ./backend/
+          # Собираем backend-образ из корня репозитория, используя Dockerfile
+          # лежащий в backend/.
+          context: .
+          file: backend/Dockerfile
           push: true
           tags: warrior88888/kittygram_backend:latest
   frontend_tests:
