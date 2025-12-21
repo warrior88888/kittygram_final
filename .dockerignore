@@ -1,0 +1,47 @@
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.env
+venv/
+env/
+ENV/
+
+# Database
+*.sqlite3
+db.sqlite3
+
+# Media files (we don't want to copy user uploads to image)
+media/
+
+# Static files (collected on runtime)
+collected_static/
+staticfiles/
+
+# Node modules
+node_modules/
+
+# Logs
+*.log
+
+# Test cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
