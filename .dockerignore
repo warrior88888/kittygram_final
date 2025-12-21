@@ -23,12 +23,6 @@ ENV/
 *.sqlite3
 db.sqlite3
 
-# Media files (we don't want to copy user uploads to image)
-media/
-
-# Static files (collected on runtime)
-collected_static/
-staticfiles/
 
 # Node modules
 node_modules/
