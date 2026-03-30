@@ -1,24 +1,56 @@
-FROM python:3.10-slim AS builder
+# Use a Python image with uv pre-installed
+FROM astral/uv:python3.13-bookworm-slim
 
+# Install gosu for privilege dropping at runtime
+RUN apt-get update && apt-get install -y --no-install-recommends gosu \
+    && rm -rf /var/lib/apt/lists/*
+
+# Setup a non-root user
+RUN groupadd --system --gid 999 django \
+ && useradd --system --gid 999 --uid 999 --create-home django
+
+# Install the project into `/app`
 WORKDIR /app
 
-COPY backend/requirements.txt ./backend/requirements.txt
-RUN pip install --no-cache-dir --prefix=/install -r ./backend/requirements.txt
+# Enable bytecode compilation
+ENV UV_COMPILE_BYTECODE=1
 
+# Copy from the cache instead of linking since it's a mounted volume
+ENV UV_LINK_MODE=copy
 
-FROM python:3.10-slim
+# Omit development dependencies
+ENV UV_NO_DEV=1
 
-WORKDIR /app
+# Ensure installed tools can be executed out of the box
+ENV UV_TOOL_BIN_DIR=/usr/local/bin
 
-COPY --from=builder /install /usr/local
+# Install the project's dependencies using the lockfile and settings
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --locked --no-dev --no-install-project
 
-COPY tests.yml ./tests.yml
-COPY docker-compose.production.yml ./docker-compose.production.yml
-COPY kittygram_workflow.yml ./kittygram_workflow.yml
-COPY pytest.ini ./pytest.ini
+# Then, add the rest of the project source code and install it
+# Installing separately from its dependencies allows optimal layer caching
+COPY . /app
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --no-dev --locked
 
-COPY backend ./backend
+# Place executables in the environment at the front of the path
+ENV PATH="/app/.venv/bin:$PATH"
 
-RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
+# Copy entrypoint and create required directories
+# entrypoint runs as root to fix volume permissions at runtime, then drops to django via gosu
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh \
+    && mkdir -p /app/collected_static /app/media /var/log/django
 
-CMD ["sh", "-c", "while ! nc -z db 5432; do sleep 1; done && python /app/backend/manage.py migrate && python /app/backend/manage.py collectstatic --no-input && gunicorn --chdir /app/backend --bind 0.0.0.0:8000 kittygram_backend.wsgi"]
+# Run entrypoint as root (it will drop to django internally via gosu)
+ENTRYPOINT ["entrypoint.sh"]
+
+# Run Django App using Gunicorn (launched via gosu inside entrypoint)
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "team_finder.wsgi", "--workers", "3"]
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+  CMD gosu django python manage.py health_check health_check || exit 1/app/backend/manage.py collectstatic --no-input && gunicorn --chdir /app/backend --bind 0.0.0.0:8000 kittygram_backend.wsgi"]
