@@ -1,5 +1,5 @@
 # Use a Python image with uv pre-installed
-FROM astral/uv:python3.13-bookworm-slim
+FROM astral/uv:python3.10-bookworm-slim
 
 # Install gosu for privilege dropping at runtime
 RUN apt-get update && apt-get install -y --no-install-recommends gosu \
@@ -49,8 +49,8 @@ RUN chmod +x /usr/local/bin/entrypoint.sh \
 ENTRYPOINT ["entrypoint.sh"]
 
 # Run Django App using Gunicorn (launched via gosu inside entrypoint)
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "team_finder.wsgi", "--workers", "3"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "team_finder.wsgi", "--workers", "2"]
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-  CMD gosu django python manage.py health_check health_check || exit 1/app/backend/manage.py collectstatic --no-input && gunicorn --chdir /app/backend --bind 0.0.0.0:8000 kittygram_backend.wsgi"]
+  CMD gosu django python manage.py health_check health_check || exit 1

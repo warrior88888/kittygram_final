@@ -1,19 +1,33 @@
-from cats.views import AchievementViewSet, CatViewSet
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from health_check.views import HealthCheckView
 from rest_framework import routers
+
+from cats.views import AchievementViewSet, CatViewSet
+from config import app_config
 
 router = routers.DefaultRouter()
 router.register(r'cats', CatViewSet)
 router.register(r'achievements', AchievementViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(app_config.django.admin_path, admin.site.urls),
+    path(
+        app_config.django.healthcheck_path,
+        HealthCheckView.as_view(
+            checks=[
+                "health_check.Database",
+                "health_check.Storage",
+                "health_check.Cache",
+            ]
+        ),
+        name="health_check",
+    ),
     path('api/', include(router.urls)),
-    path('api/', include('djoser.urls')),  # Работа с пользователями
-    path('api/', include('djoser.urls.authtoken')),  # Работа с токенами
+    path('api/', include('djoser.urls')),  # Users management
+    path('api/', include('djoser.urls.authtoken')),  # Token management
 ]
 
 if settings.DEBUG:

@@ -7,12 +7,12 @@ from rest_framework.test import APIClient
 
 class CatsAPITestCase(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user(username='auth_user')
+        user_model = get_user_model()
+        self.user = user_model.objects.create_user(username='auth_user') # type: ignore[reportAttributeAccessIssue]
         self.client = APIClient()
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.user) # type: ignore[reportAttributeAccessIssue]
 
     def test_list_exists(self):
-        """Проверка доступности списка задач."""
+        """Проверка доступности списка котиков."""
         response = self.client.get('/api/cats/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
+        assert response.status_code == HTTPStatus.OK

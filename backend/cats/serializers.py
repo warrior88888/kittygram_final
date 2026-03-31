@@ -1,5 +1,6 @@
 import base64
 import datetime as dt
+from typing import cast
 
 import webcolors
 from django.core.files.base import ContentFile
@@ -15,8 +16,8 @@ class Hex2NameColor(serializers.Field):
     def to_internal_value(self, data):
         try:
             data = webcolors.hex_to_name(data)
-        except ValueError:
-            raise serializers.ValidationError('Для этого цвета нет имени')
+        except ValueError as err:
+            raise serializers.ValidationError('Для этого цвета нет имени') from err
         return data
 
 
@@ -66,13 +67,13 @@ class CatSerializer(serializers.ModelSerializer):
         return dt.datetime.now().year - obj.birth_year
 
     def create(self, validated_data):
-        if 'achievements' not in self.initial_data:
+        if 'achievements' not in cast(dict, self.initial_data):
             cat = Cat.objects.create(**validated_data)
             return cat
         achievements = validated_data.pop('achievements')
         cat = Cat.objects.create(**validated_data)
         for achievement in achievements:
-            current_achievement, status = Achievement.objects.get_or_create(
+            current_achievement, _status = Achievement.objects.get_or_create(
                 **achievement
             )
             AchievementCat.objects.create(
@@ -95,7 +96,7 @@ class CatSerializer(serializers.ModelSerializer):
         achievements_data = validated_data.pop('achievements')
         lst = []
         for achievement in achievements_data:
-            current_achievement, status = Achievement.objects.get_or_create(
+            current_achievement, _status = Achievement.objects.get_or_create(
                 **achievement
             )
             lst.append(current_achievement)

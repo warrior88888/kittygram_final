@@ -1,17 +1,16 @@
-# flake8: noqa
 from pathlib import Path
 
-from .config import settings
+from config import app_config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = settings.django.SECRET_KEY.get_secret_value()
+SECRET_KEY = app_config.django.secret_key.get_secret_value()
 
-DEBUG = settings.django.DEBUG
+DEBUG = app_config.django.debug
 
-ALLOWED_HOSTS = settings.server.allowed_hosts
+ALLOWED_HOSTS = app_config.django.allowed_hosts
 
-CSRF_TRUSTED_ORIGINS = [f'https://{settings.server.DOMAIN}']
+CSRF_TRUSTED_ORIGINS = app_config.django.csrf_trusted_origins
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -57,23 +56,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'kittygram_backend.wsgi.application'
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': settings.db.NAME,
-        'USER': settings.db.USER,
-        'PASSWORD': settings.db.PASS.get_secret_value(),
-        'HOST': settings.db.HOST.get_secret_value(),
-        'PORT': settings.db.PORT,
-    }
-}
+DATABASES = {"default": app_config.postgres.django_db_dict}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', # noqa: E501
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
@@ -121,9 +111,4 @@ REST_FRAMEWORK = {
 
 # Cors
 
-CORS_ALLOWED_ORIGINS = [
-    f'https://{settings.server.DOMAIN}',
-    'http://localhost:3000',
-    'http://localhost:8000',
-    'http://127.0.0.1:3000',
-]
+CORS_ALLOWED_ORIGINS = app_config.django.csrf_trusted_origins

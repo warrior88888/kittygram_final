@@ -1,0 +1,126 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "django==3.2.3",
+    "django-cors-headers==3.13.0",
+    "django-health-check>=3.18.3",
+    "djangorestframework==3.12.4",
+    "djoser==2.1.0",
+    "gunicorn==20.1.0",
+    "pillow==9.0.0",
+    "psycopg2-binary==2.9.3",
+    "pydantic-settings==2.12.0",
+    "pyyaml==6.0",
+    "webcolors==1.11.1",
+]
+
+[dependency-groups]
+dev = [
+    "django-stubs>=6.0.1",
+    "pyright>=1.1.408",
+    "pytest==6.2.4",
+    "pytest-django==4.4.0",
+    "pytest-pythonpath==0.7.3",
+    "ruff>=0.15.8",
+]
+
+[tool.pyright]
+reportIncompatibleMethodOverride = false
+reportIncompatibleVariableOverride = false
+
+[tool.django-stubs]
+django_settings_module = "kittygram_backend.settings"
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+    "migrations",
+]
+
+# Same as Black.
+line-length = 88
+indent-width = 4
+
+# Assume Python 3.13
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "F",
+    "E",
+    "I",
+    "N",
+    "UP",
+    "RUF",
+    "B",
+    "C4",
+    "ISC",
+    "PIE",
+    "PT",
+    "PTH",
+    "SIM",
+    "TID",
+    "DJ"
+]
+ignore = [
+    "RUF001",
+    "RUF002",
+    "RUF012",
+    "DJ001"
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+docstring-code-format = true
+docstring-code-line-length = 88
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"

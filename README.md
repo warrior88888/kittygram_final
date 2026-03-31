@@ -1,81 +1,20 @@
-# Kittygram Infrastructure & CI/CD
+Как работать с репозиторием финального задания
+Что нужно сделать
+Настроить запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
 
-Проект Kittygram — это микросервисное приложение, работающее в Docker-контейнерах. В репозитории настроен полный цикл CI/CD с использованием GitHub Actions: от проверки линтерами до автоматического деплоя на удаленный сервер и финальной проверки доступности сайтов.
+Как проверить работу с помощью автотестов
+В корне репозитория создайте файл tests.yml со следующим содержимым:
 
-## 🛠 Технологии
-* **Backend:** Python (Django), Pydantic, Ruff
-* **Frontend:** React, Node.js
-* **Infrastructure:** Docker, Docker Compose, Nginx (Gateway)
-* **CI/CD:** GitHub Actions, Pytest
-
----
-
-## ⚙️ Настройка репозитория для CI/CD
-
-Для успешного запуска пайплайна необходимо настроить секреты и конфигурационные файлы.
-
-### 1. GitHub Secrets
-Перейдите в **Settings > Secrets and variables > Actions** и добавьте следующие секреты:
-
-* `DOCKER_USERNAME` — ваш логин на Docker Hub.
-* `DOCKER_PASSWORD` — ваш пароль (или Access Token) на Docker Hub.
-* `HOST` — IP-адрес вашего сервера.
-* `USER` — имя пользователя на сервере (например, `root`).
-* `SSH_KEY` — приватный SSH-ключ (содержимое файла `id_rsa`).
-* `PASSPHRASE` — пароль для SSH-ключа (если вы его устанавливали).
-* `TELEGRAM_TO` — ваш ID в Telegram (можно узнать у `@userinfobot`).
-* `TELEGRAM_TOKEN` — токен вашего бота (от `@BotFather`).
-
-### 2. Файл конфигурации тестов
-В корневой директории проекта **обязательно** должен находиться файл `tests.yml`. Он используется автотестами для проверки корректности деплоя.
-
-**Пример содержания `tests.yml`:**
-```yaml
 repo_owner: ваш_логин_на_гитхабе
-kittygram_domain: [https://ваш-домен-киттиграм.duckdns.org](https://ваш-домен-киттиграм.duckdns.org)
-taski_domain: [https://ваш-домен-таски.duckdns.org](https://ваш-домен-таски.duckdns.org)
+kittygram_domain: полная ссылка (https://доменное_имя) на ваш проект Kittygram
+taski_domain: полная ссылка (https://доменное_имя) на ваш проект Taski
 dockerhub_username: ваш_логин_на_докерхабе
-```
+Скопируйте содержимое файла .github/workflows/main.yml в файл kittygram_workflow.yml в корневой директории проекта.
 
-🧪 Тестирование
-Локальный запуск
-Для проверки кода перед пушем:
+Для локального запуска тестов создайте виртуальное окружение, установите в него зависимости из backend/requirements.txt и запустите в корневой директории проекта pytest.
 
-Создайте и активируйте виртуальное окружение:
-```
-python3 -m venv venv
-source venv/bin/activate
-```
-
-Установите зависимости:
-
-```
-pip install -r backend/requirements.txt
-pip install pytest pytest-django pytest-pythonpath requests PyYAML
-```
-
-```
-pytest
-```
-
-Автоматические проверки в Workflow
-Workflow kittygram_workflow.yml разделен на этапы:
-
-Tests: Линтинг кода (Ruff) и Django-тесты.
-
-Build & Push: Сборка Docker-образов (backend, frontend, gateway) и отправка на Docker Hub.
-
-Deploy: Автоматическое обновление проекта на боевом сервере.
-
-Post-deploy Check: Финальная проверка доступности API и фронтенда после 20-секундной паузы.
-
-# ✅ Чек-лист перед отправкой
- Проект Taski доступен по доменному имени, указанному в tests.yml.
-
-1)  Проект Kittygram доступен по доменному имени, указанному в tests.yml.
-
-2)  Пуш в ветку main запускает тестирование и деплой Kittygram.
-
-3) После успешного деплоя приходит сообщение в Telegram.
-
-4) В корне проекта присутствует файл kittygram_workflow.yml.
+Чек-лист для проверки перед отправкой задания
+Проект Taski доступен по доменному имени, указанному в tests.yml.
+Проект Kittygram доступен по доменному имени, указанному в tests.yml.
+Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
+В корне проекта есть файл kittygram_workflow.yml.
