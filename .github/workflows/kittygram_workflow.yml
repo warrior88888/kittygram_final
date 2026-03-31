@@ -128,7 +128,6 @@ jobs:
             KT__DJANGO__DOMAIN=${{ secrets.KT__DJANGO__DOMAIN }}
             KT__DJANGO__HEALTHCHECK_PATH=${{ secrets.KT__DJANGO__HEALTHCHECK_PATH }}
             KT__DJANGO__ADMIN_PATH=${{ secrets.KT__DJANGO__ADMIN_PATH }}
-            KT__POSTGRES__HOST=${{ secrets.KT__POSTGRES__HOST }}
             KT__POSTGRES__DB=${{ secrets.KT__POSTGRES__DB }}
             KT__POSTGRES__USER=${{ secrets.KT__POSTGRES__USER }}
             KT__POSTGRES__PASSWORD=${{ secrets.KT__POSTGRES__PASSWORD }}
