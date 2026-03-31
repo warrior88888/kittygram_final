@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'cats.apps.CatsConfig',
+    "health_check"
 ]
 
 MIDDLEWARE = [

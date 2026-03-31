@@ -2,7 +2,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from health_check.views import HealthCheckView
 from rest_framework import routers
 
 from cats.views import AchievementViewSet, CatViewSet
@@ -14,17 +13,7 @@ router.register(r'achievements', AchievementViewSet)
 
 urlpatterns = [
     path(app_config.django.admin_path, admin.site.urls),
-    path(
-        app_config.django.healthcheck_path,
-        HealthCheckView.as_view(
-            checks=[
-                "health_check.Database",
-                "health_check.Storage",
-                "health_check.Cache",
-            ]
-        ),
-        name="health_check",
-    ),
+    path(app_config.django.healthcheck_path, include("health_check.urls")),
     path('api/', include(router.urls)),
     path('api/', include('djoser.urls')),  # Users management
     path('api/', include('djoser.urls.authtoken')),  # Token management
