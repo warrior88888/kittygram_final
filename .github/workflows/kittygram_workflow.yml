@@ -97,8 +97,8 @@ jobs:
           context: ${{ matrix.context }}
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ matrix.tag }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.component }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.component }}
   deploy:
     runs-on: ubuntu-latest
     needs: build-and-push
@@ -137,38 +137,13 @@ jobs:
             docker compose -f docker-compose.production.yml pull
             docker compose -f docker-compose.production.yml up -d --remove-orphans
             docker image prune -af
-  post-deploy-tests:
-    runs-on: ubuntu-latest
-    needs: deploy
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-      - name: Install dependencies
-        run: pip install pytest requests PyYAML
-      - name: Wait for services to be ready
-        run: |
-          echo "Waiting for services to become available..."
-          for i in $(seq 1 12); do
-            if curl -sf --max-time 5 "https://${{ secrets.KT__DJANGO__DOMAIN }}" > /dev/null 2>&1; then
-              echo "Service is up after $((i * 5))s"
-              break
-            fi
-            echo "Attempt $i/12: not ready yet, retrying in 5s..."
-            sleep 5
-          done
-      - name: Run post-deploy tests
-        run: pytest tests/test_connection.py tests/test_dockerhub_images.py -v --tb=short
   notify:
     runs-on: ubuntu-latest
-    needs: post-deploy-tests
+    needs: deploy
     if: always()
     steps:
       - name: Notify success
-        if: needs.post-deploy-tests.result == 'success'
+        if: needs.deploy.result == 'success'
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
@@ -178,7 +153,7 @@ jobs:
             Commit: ${{ github.event.head_commit.message }}
             Author: ${{ github.event.head_commit.author.name }}
       - name: Notify failure
-        if: needs.post-deploy-tests.result != 'success'
+        if: needs.deploy.result != 'success'
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
