@@ -1,5 +1,5 @@
 # Use a Python image with uv pre-installed
-FROM astral/uv:python3.10-bookworm-slim
+FROM astral/uv:python3.13-bookworm-slim
 
 # Install gosu for privilege dropping at runtime
 RUN apt-get update && apt-get install -y --no-install-recommends gosu \
