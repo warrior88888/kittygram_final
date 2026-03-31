@@ -76,7 +76,7 @@ def safely_load_yaml_file(path_to_file: Path) -> dict[str, Union[dict, str]]:
 
 
 def test_workflow_file(base_dir: Path, workflow_file_name: str):
-    path_to_file = base_dir / workflow_file_name
+    path_to_file = base_dir / ".github" / "workflows" / workflow_file_name
     assert path_to_file.is_file(), (
         f'Убедитесь, что корневая директория проекта содержит файл '
         f'`{workflow_file_name}`, в котором описан workflow для Kittygram.'
