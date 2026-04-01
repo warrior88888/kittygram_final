@@ -62,6 +62,7 @@ services:
 
   kittygram_gateway:
     image: warrior88888/kittygram_gateway
+    container_name: kittygram_gateway
     environment:
       ADMIN_URL: ${KT__DJANGO__ADMIN_PATH}
     restart: unless-stopped
