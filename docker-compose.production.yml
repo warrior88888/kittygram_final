@@ -74,7 +74,7 @@ services:
       - media:/media/
     depends_on:
       kittygram_backend:
-        condition: service_started
+        condition: service_healthy
       frontend:
         condition: service_completed_successfully
 
