@@ -52,5 +52,5 @@ ENTRYPOINT ["entrypoint.sh"]
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "backend.wsgi", "--workers", "2"]
 
 # Healthcheck
-HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=15s --start-period=30s --retries=3 \
   CMD gosu django python manage.py health_check health_check || exit 1
