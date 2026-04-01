@@ -6,6 +6,15 @@ from typing import Optional
 
 import requests
 
+HEADERS = {
+    'User-Agent': (
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+        '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    ),
+    'Accept': '*/*',
+    'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+}
+
 
 def _get_validated_link(
         deploy_file_info: tuple[Path, str],
@@ -36,7 +45,7 @@ def _get_validated_link(
 
 def _make_safe_request(link: str, stream: bool = False) -> requests.Response:
     try:
-        response = requests.get(link, stream=stream, timeout=15)
+        response = requests.get(link, stream=stream, timeout=15, headers=HEADERS)
     except requests.exceptions.SSLError:
         raise AssertionError(
             f'Убедитесь, что настроили шифрование для `{link}`.'
@@ -84,7 +93,7 @@ def test_link_connection(
         js_link = _get_js_link(response)
         assert js_link, assert_msg
         try:
-            taski_response = requests.get(f'{link}/{js_link}')
+            taski_response = requests.get(f'{link}/{js_link}', headers=HEADERS)
         except requests.exceptions.ConnectionError:
             raise AssertionError(assert_msg)
         assert taski_response.status_code == HTTPStatus.OK, assert_msg
@@ -129,7 +138,7 @@ def test_kittygram_static_is_available(
     )
 
     assert_msg = 'Убедитесь, что статические файлы для `Kittygram` доступны.'
-    js_link_response = requests.get(f'{link}/{js_link}')
+    js_link_response = requests.get(f'{link}/{js_link}', headers=HEADERS)
     expected_status = HTTPStatus.OK
     assert js_link_response.status_code == expected_status, assert_msg
 
@@ -151,7 +160,7 @@ def test_kittygram_api_available(
         f'`{link}/api/...`.'
     )
     try:
-        response = requests.post(signup_link, data=form_data, timeout=15)
+        response = requests.post(signup_link, data=form_data, timeout=15, headers=HEADERS)
     except requests.exceptions.SSLError:
         raise AssertionError(
             f'Убедитесь, что настроили шифрование для `{link}`.'
