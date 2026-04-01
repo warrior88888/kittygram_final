@@ -41,7 +41,6 @@ dev = [
     { name = "django-stubs" },
     { name = "pyright" },
     { name = "pytest-django" },
-    { name = "pytest-pythonpath" },
     { name = "pyyaml" },
     { name = "requests" },
     { name = "ruff" },
@@ -65,7 +64,6 @@ dev = [
     { name = "django-stubs", specifier = ">=6.0.1" },
     { name = "pyright", specifier = ">=1.1.408" },
     { name = "pytest-django", specifier = ">=4.12.0" },
-    { name = "pytest-pythonpath", specifier = ">=0.7.3" },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "requests", specifier = ">=2.33.0" },
     { name = "ruff", specifier = ">=0.15.8" },
@@ -556,15 +554,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/13/2b/db9a193df89e56601
 wheels = [
     { url = "https://files.pythonhosted.org/packages/83/a5/41d091f697c09609e7ef1d5d61925494e0454ebf51de7de05f0f0a728f1d/pytest_django-4.12.0-py3-none-any.whl", hash = "sha256:3ff300c49f8350ba2953b90297d23bf5f589db69545f56f1ec5f8cff5da83e85", size = 26123, upload-time = "2026-02-14T18:40:47.381Z" },
 ]
-
-[[package]]
-name = "pytest-pythonpath"
-version = "0.7.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "pytest" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/46/c1/4b784495bb316962962df191b3c1b2302c60236301406283a9de1470786f/pytest-pythonpath-0.7.3.tar.gz", hash = "sha256:63fc546ace7d2c845c1ee289e8f7a6362c2b6bae497d10c716e58e253e801d62", size = 4498, upload-time = "2018-08-22T18:50:23.847Z" }
 
 [[package]]
 name = "python-dotenv"
